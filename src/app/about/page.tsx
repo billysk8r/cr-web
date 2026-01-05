@@ -9,7 +9,7 @@ export default function AboutPage() {
           The Story
         </h1>
         <p className="text-xl md:text-2xl font-bold italic text-zinc-800 dark:text-zinc-100">
-          "Chamber music is meant to be a conversation between friends."
+          &ldquo;Chamber music is meant to be a conversation between friends.&rdquo;
         </p>
       </section>
 
@@ -17,12 +17,12 @@ export default function AboutPage() {
       <section className="grid grid-cols-1 gap-10">
         <div className="prose dark:prose-invert max-w-none space-y-6">
           <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400">
-            Founded in 2006 by {" "}
+            Founded in 2006 by{" "}
             <strong className="text-zinc-900 dark:text-white font-bold">
               Charith Premawardhana
             </strong>
             , Classical Revolution began as a weekly residency at the Revolution
-            Café in San Francisco’s Mission District. The goal was simple:
+            Caf&eacute; in San Francisco&rsquo;s Mission District. The goal was simple:
             provide a place where musicians could perform chamber music in a
             relaxed, social environment.
           </p>
@@ -42,7 +42,7 @@ export default function AboutPage() {
 
           <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400">
             What started as a local jam session quickly transformed into a
-            global movement. By breaking the "fourth wall" of the concert stage,
+            global movement. By breaking the &ldquo;fourth wall&rdquo; of the concert stage,
             Classical Revolution has expanded to over 40 chapters worldwide,
             bringing high-caliber music to neighborhood hangouts from New York
             to Berlin.
@@ -68,7 +68,7 @@ export default function AboutPage() {
           </h3>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             From conservatory students to seasoned professionals, our network
-            thrives on the "Chamber Jam" format—spontaneous, high-energy
+            thrives on the &ldquo;Chamber Jam&rdquo; format&mdash;spontaneous, high-energy
             collaborations that invite the audience into the process.
           </p>
         </div>

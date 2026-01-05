@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 export default function MediaPage() {
-  // 1. Replace these with your actual filenames from public/media/
   const images = [
     "/172179383_10159098289872510_2798972059275309395_n.jpg",
     "/468297507_10161831188542510_4936577226538562967_n.jpg",
@@ -32,6 +31,14 @@ export default function MediaPage() {
 
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
+  const showNext = useCallback(() => {
+    setSelectedIdx((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : 0));
+  }, [images.length]);
+
+  const showPrev = useCallback(() => {
+    setSelectedIdx((prev) => (prev !== null && prev > 0 ? prev - 1 : images.length - 1));
+  }, [images.length]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -42,10 +49,7 @@ export default function MediaPage() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIdx]);
-
-  const showNext = () => setSelectedIdx((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : 0));
-  const showPrev = () => setSelectedIdx((prev) => (prev !== null && prev > 0 ? prev - 1 : images.length - 1));
+  }, [selectedIdx, showNext, showPrev]);
 
   return (
     <div className="flex flex-col gap-10 py-10 px-6 max-w-6xl mx-auto transition-colors">
@@ -86,7 +90,7 @@ export default function MediaPage() {
 
           {/* Navigation */}
           <button onClick={showPrev} className="absolute left-4 text-white text-4xl p-4 hover:bg-white/10 rounded-full transition-colors">
-            ‹
+            &lsaquo;
           </button>
 
           <div className="relative w-full h-full max-w-5xl max-h-[80vh]">
@@ -99,7 +103,7 @@ export default function MediaPage() {
           </div>
 
           <button onClick={showNext} className="absolute right-4 text-white text-4xl p-4 hover:bg-white/10 rounded-full transition-colors">
-            ›
+            &rsaquo;
           </button>
         </div>
       )}
@@ -110,8 +114,8 @@ export default function MediaPage() {
           Featured Press
         </h3>
         <p className="text-zinc-600 dark:text-zinc-500 italic">
-          "Classical Revolution is bringing chamber music back to its roots..."
-          <span className="block mt-2 font-bold text-zinc-900 dark:text-zinc-400">— The New York Times</span>
+          &ldquo;Classical Revolution is bringing chamber music back to its roots...&rdquo;
+          <span className="block mt-2 font-bold text-zinc-900 dark:text-zinc-400">&mdash; The New York Times</span>
         </p>
       </div>
     </div>
