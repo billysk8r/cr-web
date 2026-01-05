@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 
 export default function MediaPage() {
@@ -30,6 +30,8 @@ export default function MediaPage() {
   ];
 
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const showNext = useCallback(() => {
     setSelectedIdx((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : 0));
@@ -38,6 +40,28 @@ export default function MediaPage() {
   const showPrev = useCallback(() => {
     setSelectedIdx((prev) => (prev !== null && prev > 0 ? prev - 1 : images.length - 1));
   }, [images.length]);
+
+  // Swipe logic
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) showNext();
+    if (isRightSwipe) showPrev();
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -82,30 +106,33 @@ export default function MediaPage() {
       {selectedIdx !== null && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 touch-none"
-          onClick={() => setSelectedIdx(null)} // Click background to close
+          onClick={() => setSelectedIdx(null)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Close Button - High Z-Index */}
+          {/* Close Button - Added backdrop circle for visibility */}
           <button
             onClick={(e) => { e.stopPropagation(); setSelectedIdx(null); }}
-            className="absolute top-6 right-6 text-white text-5xl font-light hover:text-red-600 z-[70] transition-colors leading-none"
+            className="absolute top-6 right-6 text-white text-4xl p-2 bg-black/40 hover:bg-red-600 rounded-full w-12 h-12 flex items-center justify-center z-[70] transition-all leading-none"
             aria-label="Close lightbox"
           >
             &times;
           </button>
 
-          {/* Navigation - High Z-Index & Mobile Optimized Targets */}
+          {/* Navigation - Added bg-black/20 and rounded corners for contrast */}
           <button 
             onClick={(e) => { e.stopPropagation(); showPrev(); }} 
-            className="absolute left-2 md:left-6 text-white text-5xl md:text-6xl p-4 z-[70] hover:text-red-600 transition-all"
+            className="absolute left-2 md:left-6 text-white text-5xl md:text-6xl p-4 z-[70] bg-black/20 hover:bg-black/40 hover:text-red-600 rounded-lg transition-all"
             aria-label="Previous image"
           >
             &lsaquo;
           </button>
 
-          {/* Image Container - Lower Z-Index than buttons */}
+          {/* Image Container */}
           <div 
             className="relative w-full h-full max-w-5xl max-h-[85vh] z-60"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image
+            onClick={(e) => e.stopPropagation()} 
           >
             <Image
               src={`${images[selectedIdx]}`}
@@ -119,7 +146,7 @@ export default function MediaPage() {
 
           <button 
             onClick={(e) => { e.stopPropagation(); showNext(); }} 
-            className="absolute right-2 md:right-6 text-white text-5xl md:text-6xl p-4 z-[70] hover:text-red-600 transition-all"
+            className="absolute right-2 md:right-6 text-white text-5xl md:text-6xl p-4 z-[70] bg-black/20 hover:bg-black/40 hover:text-red-600 rounded-lg transition-all"
             aria-label="Next image"
           >
             &rsaquo;
